@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: furima-app
+    env: docker
+    dockerfilePath: ./Dockerfile
+    startCommand: ./bin/rails server -b 0.0.0.0 -p 3000
+    envVars:
+      - key: DATABASE_URL
+        value: postgresql://furima_production_gvhx_user:p1RAhDUxQ1dqX5ngsu9ZH5C3I27fImTx@dpg-cu7ok0d6l47c73eaaup0-a/furima_production_gvhx
+      - key: SECRET_KEY_BASE
+        generateValue: true
+    autoDeploy: true
