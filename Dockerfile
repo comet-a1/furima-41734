@@ -30,6 +30,10 @@ RUN bundle install && \
 # Copy application code
 COPY . .
 
+#実行権限の付与
+chmod +x ./bin/rails
+
+
 # Precompile bootsnap code for faster boot times
 RUN bundle exec bootsnap precompile app/ lib/
 
