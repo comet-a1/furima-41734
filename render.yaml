@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: furima-app
+    name: furima-41734
     env: docker
     dockerfilePath: ./Dockerfile
     startCommand: ./bin/rails server -b 0.0.0.0 -p 3000
