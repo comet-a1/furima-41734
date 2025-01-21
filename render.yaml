@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: furima
+    env: ruby
+    rootDirectory: furima-41734
+    buildCommand: |
+      echo "Starting build process..."
+      bundle install
+      yarn install
+      rails assets:precompile
+      echo "Build completed."

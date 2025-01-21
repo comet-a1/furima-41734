@@ -1,63 +1,109 @@
 # syntax = docker/dockerfile:1
 
-# Make sure RUBY_VERSION matches the Ruby version in .ruby-version and Gemfile
+# ベースイメージの指定
 ARG RUBY_VERSION=3.2.0
-FROM registry.docker.com/library/ruby:$RUBY_VERSION-slim as base
+FROM ruby:$RUBY_VERSION-slim AS base
 
-# Rails app lives here
+# 作業ディレクトリの設定
 WORKDIR /rails
 
-# Set production environment
-ENV RAILS_ENV="production" \
-    BUNDLE_DEPLOYMENT="1" \
-    BUNDLE_PATH="/usr/local/bundle" \
-    BUNDLE_WITHOUT="development"
+# 必要なパッケージのインストール
+RUN set -eux; \
+    apt-get update -qq; \
+    until apt-get install --no-install-recommends -y \
+        curl \
+        libpq-dev \
+        libjemalloc2 \
+        libvips \
+        git; do \
+      echo "apt-get install failed, retrying in 5 seconds..."; \
+      sleep 5; \
+      apt-get update -qq; \
+    done; \
+    rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 
+# 環境変数の設定
+ENV RAILS_ENV=production \
+    BUNDLE_DEPLOYMENT=1 \
+    BUNDLE_PATH=/usr/local/bundle \
+    BUNDLE_WITHOUT=development
 
-# Throw-away build stage to reduce size of final image
-FROM base as build
+# ビルドステージの開始
+FROM base AS build
 
-# Install packages needed to build gems
-RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential default-libmysqlclient-dev libpq-dev git libvips pkg-config
+# ビルドに必要なパッケージのインストール
+RUN set -eux; \
+    apt-get update -qq; \
+    until apt-get install --no-install-recommends -y \
+        build-essential \
+        libpq-dev \
+        git \
+        node-gyp \
+        pkg-config \
+        python-is-python3; do \
+      echo "apt-get install failed, retrying in 5 seconds..."; \
+      sleep 5; \
+      apt-get update -qq; \
+    done; \
+    rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 
-# Install application gems
-COPY Gemfile Gemfile.lock ./
+# Node.js と Yarn のインストール
+ARG NODE_VERSION=20.17.0
+ARG YARN_VERSION=1.22.22
+ENV PATH=/usr/local/node/bin:$PATH
+RUN curl -sL https://github.com/nodenv/node-build/archive/master.tar.gz | tar xz -C /tmp/ && \
+    /tmp/node-build-master/bin/node-build "$NODE_VERSION" /usr/local/node && \
+    npm install -g yarn@$YARN_VERSION && \
+    rm -rf /tmp/node-build-master
+
+# アプリケーションの Gem をインストール
+COPY Gemfile Gemfile.lock /rails/
 RUN bundle install && \
-    rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
-    bundle exec bootsnap precompile --gemfile
+    rm -rf ~/.bundle/ "$BUNDLE_PATH"/ruby/*/cache "$BUNDLE_PATH"/ruby/*/bundler/gems/*/.git
 
-# Copy application code
-COPY . .
+# Node.js の依存関係をインストール
+COPY package.json yarn.lock /rails/
+RUN yarn install --frozen-lockfile
 
+# アプリケーションコードをコピー
+COPY . /rails
 
-# Precompile bootsnap code for faster boot times
+# Bootsnap のプリコンパイルと権限設定
 RUN bundle exec bootsnap precompile app/ lib/
+RUN chmod +x ./bin/rails
 
-# Precompiling assets for production without requiring secret RAILS_MASTER_KEY
-RUN chmod +x ./bin/rails && SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
+# アセットのプリコンパイル
+ARG DATABASE_URL
+ARG SECRET_KEY_BASE
+ENV DATABASE_URL=$DATABASE_URL
+ENV SECRET_KEY_BASE=$SECRET_KEY_BASE
+RUN DATABASE_URL=$DATABASE_URL RAILS_ENV=production SECRET_KEY_BASE=$SECRET_KEY_BASE bundle exec rails assets:precompile
 
+# 不要な Node.js モジュールを削除（任意）
+RUN rm -rf node_modules
 
-# Final stage for app image
+# 最終ステージの開始
 FROM base
 
-# Install packages needed for deployment
-RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y curl default-mysql-client libvips && \
-    rm -rf /var/lib/apt/lists /var/cache/apt/archives
-
-# Copy built artifacts: gems, application
-COPY --from=build /usr/local/bundle /usr/local/bundle
+# ビルド済みのアーティファクトをコピー
+COPY --from=build "$BUNDLE_PATH" "$BUNDLE_PATH"
 COPY --from=build /rails /rails
 
-# Run and own only the runtime files as a non-root user for security
-RUN useradd rails --create-home --shell /bin/bash && \
-    chown -R rails:rails db log storage tmp
-USER rails:rails
+# ファイルの所有権とパーミッションを設定
+RUN groupadd --system --gid 1000 rails && \
+    useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash && \
+    chown -R rails:rails /rails
 
-# Entrypoint prepares the database.
-ENTRYPOINT ["/rails/bin/docker-entrypoint"]
+USER rails
 
-# Start the server by default, this can be overwritten at runtime
+# 作業ディレクトリの設定
+WORKDIR /rails
+
+# 環境変数の設定
+ENV RAILS_ENV=production
+
+# ポートの公開
 EXPOSE 3000
-CMD ["./bin/rails", "server"]
+
+# CMD の設定
+CMD ["bash", "-c", "bundle exec rails db:migrate && bundle exec rails server -b 0.0.0.0 -p 3000"]
