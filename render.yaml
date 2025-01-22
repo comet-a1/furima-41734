@@ -10,10 +10,10 @@ services:
     envVars:
       - key: SECRET_KEY_BASE
         sync: false
-        value: "YOUR_SECRET_KEY_BASE"
+        value: f1227a87d82b7403ad147cdec8ff8a9ffcc7d96d38b76bbc4d4a843ece7da9a1777b86e6be4a8e1d7d7b20d91759a07a3ecef7d57039c21f1d02f958a47a7e0a
       - key: DATABASE_URL
         sync: false
-        value: "YOUR_DATABASE_URL"
+        value: postgresql://furima_production_uvs7_user:O3vsCVicrcaGfmrbBp4EtbaV3fFe1LQi@dpg-cu7lrvl6l47c73e9i2u0-a/furima_production_uvs7
       - key: RAILS_ENV
         value: "production"
       - key: BUNDLE_WITHOUT
