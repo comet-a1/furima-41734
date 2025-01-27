@@ -5,7 +5,6 @@
 
 | Column                 | Type     | Options                                  |
 | ---------------------- | -------- | ---------------------------------------- |
-| id                     | bigint   | null: false, primary key, auto_increment |
 | name                   | string   | null: false                              |
 | nickname               | string   | null: false                              |
 | email                  | string   | null: false, unique: true                |
@@ -27,7 +26,6 @@
 
 | Column              | Type     | Options                                  |
 | ------------------- | -------- | ---------------------------------------- |
-| id                  | bigint   | null: false, primary key, auto_increment |
 | user_id             | bigint   | null: false, foreign_key: true           |
 | product_id          | string   | null: false, foreign_key: true           |
 | quantity            | string   | null: false, unique: true                |
@@ -49,7 +47,6 @@
 
 | Column        | Type     | Options                                  |
 | ------------- | -------- | ---------------------------------------- |
-| id            | bigint   | null: false, primary key, auto_increment |
 | user_id       | bigint   | null: false, foreign_key: true           |
 | postal_code   | string   | null: false,                             |
 | prefecture_id | string   | null: false, foreign_key: true           |
@@ -71,7 +68,6 @@
 
 | Column          | Type     | Options                                  |
 | --------------- | -------- | ---------------------------------------- |
-| id              | bigint   | null: false, primary key, auto_increment |
 | name            | string   | null: false                              |
 | description     | text     | null: false                              |
 | category_id     | bigint   | null: false, foreign_key: true           |
@@ -94,7 +90,6 @@
 
 | Column     | Type     | Options                                  |
 | ---------- | -------- | ---------------------------------------- |
-| id         | bigint   | null: false, primary key, auto_increment |
 | name       | string   | null: false, unique: true                |
 | name_kana  | string   | null: false, unique: true                |
 | region     | string   | null: false                              |
@@ -110,7 +105,6 @@
 
 | Column      | Type     | Options                                  |
 | ----------- | -------- | ---------------------------------------- |
-| id          | bigint   | null: false, primary key, auto_increment |
 | name        | string   | null: false, unique: true                |
 | description | text     |                                          |
 | parent_id   | bigint   | foreign_key: true                        |
@@ -128,7 +122,6 @@
 
 | Column     | Type     | Options                                  |
 | ---------- | -------- | ---------------------------------------- |
-| id         | bigint   | null: false, primary key, auto_increment |
 | order_id   | bigint   | null: false, foreign_key: true           |
 | product_id | bigint   | null: false, foreign_key: true           |
 | quantity   | integer  | null: false                              |
