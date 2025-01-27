@@ -12,7 +12,7 @@
 | nickname           | string   | null: false               |
 | email              | string   | null: false, unique: true |
 | encrypted_password | string   | null: false               |
-| birth_date         | date     |                           |
+| birth_date         | date     | null: false               |
 
 ### Association
 
@@ -22,46 +22,47 @@
 
 ## orders テーブル
 
-| Column              | Type     | Options                        |
-| ------------------- | -------- | ------------------------------ |
-| user_id             | bigint   | null: false, foreign_key: true |
-| product_id          | bigint   | null: false, foreign_key: true |
+| Column  | Type       | Options                        |
+| ------- | ---------- | ------------------------------ |
+| user    | references | null: false, foreign_key: true |
+| product | references | null: false, foreign_key: true |
 
 ### Association
 
 - belongs_to :user
 - belongs_to :product
+- has_one :shipping_address
 
 
 ## shipping_addresses テーブル
 
-| Column        | Type     | Options                        |
-| ------------- | -------- | ------------------------------ |
-| user_id       | bigint   | null: false, foreign_key: true |
-| postal_code   | string   | null: false                    |
-| prefecture    | string   | null: false                    |
-| city          | string   | null: false                    |
-| address_line1 | string   | null: false                    |
-| address_line2 | string   |                                |
-| phone_number  | string   |                                |
+| Column        | Type       | Options                        |
+| ------------- | ---------- | ------------------------------ |
+| order         | references | null: false, foreign_key: true |
+| postal_code   | string     | null: false                    |
+| prefecture    | string     | null: false                    |
+| city          | string     | null: false                    |
+| address_line1 | string     | null: false                    |
+| address_line2 | string     |                                |
+| phone_number  | string     |                                |
 
 ### Association
 
-- belongs_to :user
+- belongs_to :order
 
 
 ## products テーブル
 
-| Column          | Type     | Options     |
-| --------------- | -------- | ----------- |
-| name            | string   | null: false |
-| description     | text     | null: false |
-| category        | string   | null: false |
-| price           | integer  | null: false |
-| condition       | string   | null: false |
-| shipping_fee    | integer  | null: false |
-| shipping_origin | string   | null: false |
-| shipping_days   | string   | null: false |
+| Column             | Type     | Options     |
+| ------------------ | -------- | ----------- |
+| name               | string   | null: false |
+| description        | text     | null: false |
+| category_id        | integer  | null: false |
+| price              | integer  | null: false |
+| condition_id       | integer  | null: false |
+| shipping_fee_id    | integer  | null: false |
+| shipping_origin_id | integer  | null: false |
+| shipping_days_id   | integer  | null: false |
 
 ### Association
 
