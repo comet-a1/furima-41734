@@ -8,13 +8,37 @@ class User < ApplicationRecord
 
   validates :birth_date, presence: true
 
-  validates :password, presence: true, format: { with: /\A(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{6,}\z/, message: "is invalid. Include both letters and numbers" }
+  validates :password, presence: true,
+                       format: {
+                         with: /\A(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{6,}\z/,
+                         message: 'is invalid. Include both letters and numbers'
+                       }
+
   validates :password, confirmation: true
 
-  validates :last_name, presence: true, format: { with: /\A[一-龯ぁ-んァ-ンー]+\z/, message: "is invalid. Input full-width characters" }
-  validates :first_name, presence: true, format: { with: /\A[一-龯ぁ-んァ-ンー]+\z/, message: "is invalid. Input full-width characters" }
-  validates :last_name_kana, presence: true, format: { with: /\A[ァ-ンー]+\z/, message: "is invalid. Input full-width katakana characters" }
-  validates :first_name_kana, presence: true, format: { with: /\A[ァ-ンー]+\z/, message: "is invalid. Input full-width katakana characters" }
+  validates :last_name, presence: true,
+                        format: {
+                          with: /\A[一-龯ぁ-んァ-ンー]+\z/,
+                          message: 'is invalid. Input full-width characters'
+                        }
+
+  validates :first_name, presence: true,
+                         format: {
+                           with: /\A[一-龯ぁ-んァ-ンー]+\z/,
+                           message: 'is invalid. Input full-width characters'
+                         }
+
+  validates :last_name_kana, presence: true,
+                             format: {
+                               with: /\A[ァ-ンー]+\z/,
+                               message: 'is invalid. Input full-width katakana characters'
+                             }
+
+  validates :first_name_kana, presence: true,
+                              format: {
+                                with: /\A[ァ-ンー]+\z/,
+                                message: 'is invalid. Input full-width katakana characters'
+                              }
 
   validates :email, presence: true, uniqueness: true
 
