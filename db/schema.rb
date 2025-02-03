@@ -10,7 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_01_27_061554) do
+ActiveRecord::Schema[7.1].define(version: 2025_02_03_025544) do
+  create_table "items", charset: "utf8mb3", force: :cascade do |t|
+    t.string "name"
+    t.text "description", null: false
+    t.integer "category_id", null: false
+    t.integer "price", null: false
+    t.integer "condition_id", null: false
+    t.integer "shipping_fee_id", null: false
+    t.integer "shipping_origin_id", null: false
+    t.integer "shipping_days_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "users", charset: "utf8mb3", force: :cascade do |t|
     t.string "last_name", null: false
     t.string "first_name", null: false
