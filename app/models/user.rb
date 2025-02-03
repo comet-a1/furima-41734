@@ -8,25 +8,20 @@ class User < ApplicationRecord
 
   validates :birth_date, presence: true
 
-  validates :password, presence: true,
-                       format: {
-                         with: /\A(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{6,}\z/,
+  validates :password, format: {
+                         with: /\A(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]+\z/, 
                          message: 'is invalid. Include both letters and numbers'
                        }
   validates :password, confirmation: true
 
   validates :last_name, presence: true,
-                        format: { with: /\A[一-龯ぁ-んァ-ンー]+\z/, message: 'is invalid. Input full-width characters' }
+                        format: { with: /\A[ぁ-んァ-ヶ一-龥々ー]+\z/, message: 'is invalid. Input full-width characters' }
   validates :first_name, presence: true,
-                         format: { with: /\A[一-龯ぁ-んァ-ンー]+\z/, message: 'is invalid. Input full-width characters' }
+                         format: { with: /\A[ぁ-んァ-ヶ一-龥々ー]+\z/, message: 'is invalid. Input full-width characters' }
   validates :last_name_kana, presence: true,
-                             format: { with: /\A[ァ-ンー]+\z/, message: 'is invalid. Input full-width katakana characters' }
+                             format: { with: /\A[ぁ-んァ-ヶ一-龥々ー]+\z/, message: 'is invalid. Input full-width katakana characters' }
   validates :first_name_kana, presence: true,
-                              format: { with: /\A[ァ-ンー]+\z/, message: 'is invalid. Input full-width katakana characters' }
-
-  validates :email, presence: true, uniqueness: true
-
-  validates :encrypted_password, presence: true, unless: -> { new_record? }
+                              format: { with: /\A[ぁ-んァ-ヶ一-龥々ー]+\z/, message: 'is invalid. Input full-width katakana characters' }
 
   validate :prevent_duplicate_errors
 
