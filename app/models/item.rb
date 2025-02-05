@@ -1,5 +1,6 @@
 class Item < ApplicationRecord
   belongs_to :user
+  has_one :order
   has_one_attached :image
 
   extend ActiveHash::Associations::ActiveRecordExtensions
@@ -30,6 +31,11 @@ class Item < ApplicationRecord
   validates :shipping_fee_id, numericality: { other_than: 0, message: "can't be blank" }
   validates :shipping_origin_id, numericality: { other_than: 0, message: "can't be blank" }
   validates :shipping_days_id, numericality: { other_than: 0, message: "can't be blank" }
+
+
+  def sold_out?
+    order.present?
+  end
 
   private
 
