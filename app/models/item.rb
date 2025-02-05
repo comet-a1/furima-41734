@@ -32,7 +32,6 @@ class Item < ApplicationRecord
   validates :shipping_origin_id, numericality: { other_than: 0, message: "can't be blank" }
   validates :shipping_days_id, numericality: { other_than: 0, message: "can't be blank" }
 
-
   def sold_out?
     order.present?
   end
