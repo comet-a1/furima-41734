@@ -7,7 +7,7 @@ class Item < ApplicationRecord
   belongs_to :condition
   belongs_to :shipping_fee
   belongs_to :shipping_origin
-  belongs_to :shipping_day
+  belongs_to :shipping_day, foreign_key: 'shipping_days_id'
 
   validate :image_presence
   validates :name, presence: true
