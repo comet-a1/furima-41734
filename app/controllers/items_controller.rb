@@ -47,8 +47,8 @@ class ItemsController < ApplicationController
   end
 
   def redirect_if_not_seller
-    if @item.user != current_user
-      redirect_to root_path
-    end
+    return unless @item.user != current_user
+
+    redirect_to root_path
   end
 end
