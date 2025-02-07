@@ -53,7 +53,7 @@
           商品の状態
           <span class="indispensable">必須</span>
         </div>
-        <%= f.collection_select(:condition_id, Condition.all, :id, :name, {include_blank: false, selected: @item.category_id.presence || 0}, {class:"select-box", id:"item-sales-status"}) %>
+        <%= f.collection_select(:condition_id, Condition.all, :id, :name, {include_blank: false, selected: @item.condition_id.presence || 0}, {class:"select-box", id:"item-sales-status"}) %>
       </div>
     </div>
     <%# /商品の詳細 %>
@@ -69,17 +69,17 @@
           配送料の負担
           <span class="indispensable">必須</span>
         </div>
-        <%= f.collection_select(:shipping_fee_id, ShippingFee.all, :id, :name, {include_blank: false, selected: @item.category_id.presence || 0}, {class:"select-box", id:"item-shipping-fee-status"}) %>
+        <%= f.collection_select(:shipping_fee_id, ShippingFee.all, :id, :name, {include_blank: false, selected: @item.shipping_fee_id.presence || 0}, {class:"select-box", id:"item-shipping-fee-status"}) %>
         <div class="weight-bold-text">
           発送元の地域
           <span class="indispensable">必須</span>
         </div>
-        <%= f.collection_select(:shipping_origin_id, ShippingOrigin.all, :id, :name, {include_blank: false, selected: @item.category_id.presence || 0}, {class:"select-box", id:"item-prefecture"}) %>
+        <%= f.collection_select(:shipping_origin_id, ShippingOrigin.all, :id, :name, {include_blank: false, selected: @item.shipping_origin_id.presence || 0}, {class:"select-box", id:"item-prefecture"}) %>
         <div class="weight-bold-text">
           発送までの日数
           <span class="indispensable">必須</span>
         </div>
-        <%= f.collection_select(:shipping_days_id, ShippingDay.all, :id, :name, {include_blank: false, selected: @item.category_id.presence || 0}, {class:"select-box", id:"item-scheduled-delivery"}) %>
+        <%= f.collection_select(:shipping_days_id, ShippingDay.all, :id, :name, {include_blank: false, selected: @item.shipping_days_id.presence || 0}, {class:"select-box", id:"item-scheduled-delivery"}) %>
       </div>
     </div>
     <%# /配送について %>
