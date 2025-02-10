@@ -27,4 +27,14 @@ class OrderForm
     Rails.logger.error "OrderForm save failed: #{e.message}"
     false
   end
+
+  private
+
+  def prevent_duplicate_errors
+    errors.messages.each do |attribute, messages|
+      unique_messages = messages.uniq
+      errors.delete(attribute)
+      unique_messages.each { |message| errors.add(attribute, message) }
+    end
+  end
 end
