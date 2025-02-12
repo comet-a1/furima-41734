@@ -7,7 +7,8 @@ class ShippingAddress < ApplicationRecord
   validates :city, presence: { message: "can't be blank" }
   validates :address_line1, presence: { message: "can't be blank" }
   validates :phone_number, presence: { message: "can't be blank" },
-                           format: { with: /\A\d{10,11}\z/, message: 'is invalid. Input only number' }, length: { minimum: 10, maximum: 11, message: 'is too short' }
+                           format: { with: /\A\d{10,11}\z/, message: 'is invalid. Input only number' },
+                           length: { minimum: 10, maximum: 11, message: 'is too short' }
 
   private
 

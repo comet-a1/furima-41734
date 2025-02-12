@@ -4,7 +4,7 @@ class OrdersController < ApplicationController
   before_action :redirect_if_invalid_access, only: [:index, :create]
 
   def index
-    gon.public_key = ENV["PAYJP_PUBLIC_KEY"]
+    gon.public_key = ENV['PAYJP_PUBLIC_KEY']
     @order_form = OrderForm.new
   end
 
@@ -13,9 +13,9 @@ class OrdersController < ApplicationController
     if @order_form.valid?
       pay_item
       @order_form.save
-      return redirect_to root_path
+      redirect_to root_path
     else
-      gon.public_key = ENV["PAYJP_PUBLIC_KEY"]
+      gon.public_key = ENV['PAYJP_PUBLIC_KEY']
       render :index, status: :unprocessable_entity
     end
   end
@@ -27,18 +27,22 @@ class OrdersController < ApplicationController
   end
 
   def order_form_params
-    params.require(:order_form).permit(:price, :postal_code, :shipping_origin_id, :city, :address_line1,
-                                       :address_line2, :phone_number).merge(user_id: current_user.id, item_id: params[:item_id], token: params[:token])
+    params.require(:order_form)
+          .permit(:price, :postal_code, :shipping_origin_id, :city,
+                  :address_line1, :address_line2, :phone_number)
+          .merge(user_id: current_user.id,
+                 item_id: params[:item_id],
+                 token: params[:token])
   end
 
   def redirect_if_invalid_access
-    if @item.user == current_user || @item.sold_out?
-      redirect_to root_path
-    end
+    return unless @item.user == current_user || @item.sold_out?
+
+    redirect_to root_path
   end
 
   def pay_item
-    Payjp.api_key = ENV["PAYJP_SECRET_KEY"]
+    Payjp.api_key = ENV['PAYJP_SECRET_KEY']
     Payjp::Charge.create(
       amount: @item.price,
       card: order_form_params[:token],
