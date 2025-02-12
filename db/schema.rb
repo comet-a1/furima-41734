@@ -75,12 +75,12 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_10_023802) do
 
   create_table "shipping_addresses", charset: "utf8mb3", force: :cascade do |t|
     t.bigint "order_id", null: false
-    t.string "postal_code"
-    t.integer "shipping_origin_id"
-    t.string "city"
-    t.string "address_line1"
+    t.string "postal_code", null: false
+    t.integer "shipping_origin_id", null: false
+    t.string "city", null: false
+    t.string "address_line1", null: false
     t.string "address_line2"
-    t.string "phone_number"
+    t.string "phone_number", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["order_id"], name: "index_shipping_addresses_on_order_id"
